@@ -12,8 +12,8 @@ class AmoCrmService
 
     public function __construct()
     {
-        $this->subdomain = config('amocrm.subdomain'); // Ваш поддомен amoCRM
-        $this->accessToken = config('amocrm.access_token'); // Ваш долгосрочный access_token
+        $this->subdomain = config('amocrm.subdomain');
+        $this->accessToken = config('amocrm.access_token');
     }
 
     public function createContactAndDeal(array $data)
@@ -24,27 +24,24 @@ class AmoCrmService
         $date = $data['date'];
 
         try {
-            // Сначала создаём контакт
             $contactId = $this->addContact($fullName, $phoneNumber);
             if (!$contactId) {
                 throw new Exception('Не удалось создать контакт.');
             }
 
-            // Создание сделки
             $leadName = 'Сделка для ' . $fullName;
             Log::info("Создание сделки с данными: ", ['leadName' => $leadName]);
 
-            // Формируем данные для создания сделки
             $leadsData = [
                 [
                     'name' => $leadName,
-                    'price' => 20000, // Пример бюджета
+                    'price' => 20000,
                     'tags_to_add' => [
-                        ['name' => $cityTag], // Добавляем тег с городом
+                        ['name' => $cityTag],
                     ],
                     '_embedded' => [
                         'contacts' => [
-                            ['id' => $contactId] // Прикрепляем созданный контакт
+                            ['id' => $contactId]
                         ]
                     ]
                 ],

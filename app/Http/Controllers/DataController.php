@@ -28,21 +28,17 @@ class DataController extends Controller
             'date' => $request->get('date'),
         ];
 
-        // Сохраняем данные в базе данных
         $form = implode(' ', $data);
 
         try {
-            // Сохраняем данные в базе данных
             Data::create([
                 'hook' => json_encode($data),
                 'form' => $form,
                 'status_amocrm' => 'unset',
             ]);
 
-            // Создаем сделку в amoCRM
             $result = $this->amoCrmService->createContactAndDeal($data);
 
-            // Проверяем, если создание прошло успешно
             if (isset($result['error'])) {
                 Log::error('Ошибка при создании сделки в amoCRM: ' . $result['error']);
                 return response()->json([
